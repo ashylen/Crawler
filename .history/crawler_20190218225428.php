@@ -50,7 +50,7 @@ function getPageContent($url)
 //Create CSV from page content
 function createCSV($data)
 {
-    dump($data); die;
+
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="sample.csv"');
 
@@ -58,10 +58,6 @@ function createCSV($data)
     $fp = fopen('php://output', 'wb');
     $i = 0;
     foreach ($data as $key => $line) {
-        if($i == 0)
-        {
-
-        }
 
         fputcsv($fp, $line);
         $i++;

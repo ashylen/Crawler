@@ -40,7 +40,7 @@ function getPageContent($url)
         $header = trim($tableHeaders[$key]->nodeValue);
         //Remove excessing chars
         $header = str_replace(':', '', $header);
-        $nodes[str_replace(':','', $header)] =  trim($td->nodeValue);
+        $nodes[][str_replace(':','', $header)] =  trim($td->nodeValue);
     }
 
     return $nodes;
@@ -51,20 +51,21 @@ function getPageContent($url)
 function createCSV($data)
 {
     dump($data); die;
+    foreach ($data as $key => $line) {
+        foreach($line as $row)
+        {
+            
+        }
+    }
+    die;
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="sample.csv"');
 
 
     $fp = fopen('php://output', 'wb');
-    $i = 0;
-    foreach ($data as $key => $line) {
-        if($i == 0)
-        {
-
-        }
-
-        fputcsv($fp, $line);
-        $i++;
+    foreach ($data as $line) {
+        $val = explode(",", $line);
+        fputcsv($fp, $val);
     }
     fclose($fp);
 }

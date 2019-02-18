@@ -40,7 +40,7 @@ function getPageContent($url)
         $header = trim($tableHeaders[$key]->nodeValue);
         //Remove excessing chars
         $header = str_replace(':', '', $header);
-        $nodes[str_replace(':','', $header)] =  trim($td->nodeValue);
+        $nodes[][str_replace(':','', $header)] =  trim($td->nodeValue);
     }
 
     return $nodes;
@@ -48,23 +48,20 @@ function getPageContent($url)
 }
 
 //Create CSV from page content
-function createCSV($data)
+function createCSV()
 {
-    dump($data); die;
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="sample.csv"');
-
+    $data = array(
+        'aaa,bbb,ccc,dddd',
+        '123,456,789',
+        '"aaa","bbb"'
+    );
 
     $fp = fopen('php://output', 'wb');
-    $i = 0;
-    foreach ($data as $key => $line) {
-        if($i == 0)
-        {
-
-        }
-
-        fputcsv($fp, $line);
-        $i++;
+    foreach ($data as $line) {
+        $val = explode(",", $line);
+        fputcsv($fp, $val);
     }
     fclose($fp);
 }
@@ -74,6 +71,5 @@ function createCSV($data)
 //     echo ' xd'. $i;
 // }
 
-
+ createCSV();
 $data = getPageContent($website);
-createCSV($data);
