@@ -43,5 +43,6 @@ function createCSV()
 //     echo ' xd'. $i;
 // }
 
+dump($_SERVER);
 // createCSV();
 var_dump(getPageContent($website));

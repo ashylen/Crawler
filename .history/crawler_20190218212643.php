@@ -1,6 +1,6 @@
 <?php
 
-//Rest API link to page
+
 $website = 'http://www.rejestradwokatow.pl/adwokat/szczegoly/id/';
 
 //Hide warnings
@@ -43,5 +43,5 @@ function createCSV()
 //     echo ' xd'. $i;
 // }
 
-// createCSV();
+createCSV();
 var_dump(getPageContent($website));
