@@ -17,7 +17,7 @@ $website = 'https://www.rejestradwokatow.pl/adwokat/ewidencja/wykonywanie_zawodu
 
 //Get all users from given website
 $users = [];
-for ($i = 1; $i < 5; $i++)
+for ($i = 1; $i < 3; $i++)
 {
     $users[] = fetchListForIds($website.$i.'/#wyszukiwanie');
 }

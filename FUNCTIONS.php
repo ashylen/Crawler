@@ -76,11 +76,10 @@ function getPageContent($url)
 function fetchListForIds($url)
 {
     $nodes = [];
-
     $doc = new DOMDocument();
     $doc->loadHTML(file_get_contents($url));
-
     $nodes = getElementByClass($doc, 'a', 'link_zobacz');
+
     return $nodes;
 }
 
@@ -93,7 +92,6 @@ function getElementByClass(&$parentNode, $tagName, $className, $offset = 0)
     $results = [];
     $href = null;
     for ($i = 0; $i < $childNodeList->length; $i++) {
-
         $temp = $childNodeList->item($i);
         if (strpos($temp->getAttribute('class'), $className) !== false) {
                 $href = $temp->getAttribute('href');
