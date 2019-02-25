@@ -11,26 +11,51 @@ libxml_use_internal_errors(true);
 
 //Rest API link to page
 
-$website = 'https://www.rejestradwokatow.pl/adwokat/ewidencja/wykonywanie_zawodu/on/szukaj/Szukaj/strona/';
-$website = 'http://www.rejestradwokatow.pl/adwokat/szczegoly/id/';
+// $website = 'https://www.rejestradwokatow.pl/adwokat/ewidencja/wykonywanie_zawodu/on/szukaj/Szukaj/strona/';
+$website = 'https://www.rejestradwokatow.pl/adwokat/szczegoly/id/';
 ///SETTINGS
 
 //Get all users from given website
-// $users = [];
-// for ($i = 50; $i < 372; $i++)
-// {
-//     $users = array_merge(fetchListForIds($website.$i.'/#wyszukiwanie'), $users);
-// }
+$ids = file('ids.txt');
+$ids = str_getcsv( $ids[0]);
 
 $data = [];
-for($i = 40683; $i < 40685; $i++)
-{
-    $data[] = getPageContent($website.$i);
 
+
+$file = fopen('test.txt', 'wb');
+
+
+fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+$i = 0;
+$headers = [];
+$fields = [];
+
+// fputcsv($file, $fields);
+
+foreach ($ids as $key => $id) {
+    unset( $data);
+    if ($key < 5) {
+        $url = $website . intval($id);
+        $data = getPageContent($url);
+
+
+    if ($key == 0) {
+        foreach ($data as $dataKey => $value) {
+            $headers[] = $dataKey;
+        }
+        fputcsv($file, $headers);
+    }else {
+        foreach ($data as $value) {
+            $fields[] = $value;
+        }
+        fputcsv($file, $fields);
+    }
+
+    }
 }
 
-dump($data); die;
 
+fclose($file);
 
-
-// createCSV($data);
+dump('finish');
+die;

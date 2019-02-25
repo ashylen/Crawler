@@ -49,6 +49,7 @@ function getPageContent($url)
     $tableData = [];
     $tableHeaders = [];
     $nodes = [];
+    $name = [];
 
     $doc = new DOMDocument();
     $doc->loadHTML(file_get_contents($url));
