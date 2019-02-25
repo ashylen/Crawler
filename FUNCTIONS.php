@@ -54,17 +54,24 @@ function getPageContent($url)
     $doc->loadHTML(file_get_contents($url));
     $tableData = $doc->getElementsByTagName('td');
     $tableHeaders = $doc->getElementsByTagName('th');
+    $name = getElementByClass($doc, 'div', 'left');
 
     foreach ($tableData as $key => $td) {
         //Trim whitespaces
         if (!empty($tableHeaders[$key]))
-        $header = trim($tableHeaders[$key]->nodeValue);
+            $header = trim($tableHeaders[$key]->nodeValue);
 
         //Remove excessing chars
         $header = str_replace(':', '', $header);
-
-
-        $nodes[str_replace(':', '', $header)] =  trim($td->nodeValue);
+        //Prepare node for proper output
+        $node = trim($td->nodeValue);
+        $node = nl2br($node);
+        $node = preg_replace("/<br\W*?\/>/", "|", $node);
+        $node = preg_replace('/\s+/',' ', $node);
+        $node = str_replace('| | |' , ' | ' , $node);
+        $node = str_replace('| |' , ' | ' , $node);
+        $nodes['Nazwa'] = $name[0];
+        $nodes[$header] = $node;
     }
 
     return $nodes;
@@ -78,15 +85,12 @@ function fetchListForIds($url)
     $nodes = [];
     $doc = new DOMDocument();
     $doc->loadHTML(file_get_contents($url));
-    $nodes = getElementByClass($doc, 'a', 'link_zobacz');
+    $nodes = getElementHrefByClass($doc, 'a', 'link_zobacz');
 
     return $nodes;
 }
 
-/**
- *
- */
-function getElementByClass(&$parentNode, $tagName, $className, $offset = 0)
+function getElementHrefByClass(&$parentNode, $tagName, $className, $offset = 0)
 {
     $childNodeList = $parentNode->getElementsByTagName($tagName);
     $results = [];
@@ -97,6 +101,22 @@ function getElementByClass(&$parentNode, $tagName, $className, $offset = 0)
                 $href = $temp->getAttribute('href');
                 $href = str_replace('/adwokat/szczegoly/id/', '', $href);
                 $results[] = $href;
+        }
+    }
+
+    return $results;
+}
+
+function getElementByClass(&$parentNode, $tagName, $className, $offset = 0)
+{
+    $childNodeList = $parentNode->getElementsByTagName($tagName);
+    $results = [];
+    $href = null;
+    for ($i = 0; $i < $childNodeList->length; $i++) {
+        $temp = $childNodeList->item($i);
+        if ( $temp->getAttribute('class') == $className) {
+            $href = trim($temp->nodeValue);
+            $results[] = $href;
         }
     }
 

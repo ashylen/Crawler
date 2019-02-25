@@ -10,26 +10,24 @@ set_time_limit(0);
 libxml_use_internal_errors(true);
 
 //Rest API link to page
-$website = 'http://www.rejestradwokatow.pl/adwokat/szczegoly/id/';
-$website = 'https://www.rejestradwokatow.pl/adwokat/ewidencja/wykonywanie_zawodu/on/szukaj/Szukaj/strona/';
 
+$website = 'https://www.rejestradwokatow.pl/adwokat/ewidencja/wykonywanie_zawodu/on/szukaj/Szukaj/strona/';
+$website = 'http://www.rejestradwokatow.pl/adwokat/szczegoly/id/';
 ///SETTINGS
 
 //Get all users from given website
-$users = [];
-for ($i = 1; $i < 3; $i++)
-{
-    $users[] = fetchListForIds($website.$i.'/#wyszukiwanie');
-}
-
-dump( $users); die;
-
-// $data = [];
-// for($i = 49960; $i < 49966; $i++)
+// $users = [];
+// for ($i = 50; $i < 372; $i++)
 // {
-//     $data[] = getPageContent($website.$i);
-
+//     $users = array_merge(fetchListForIds($website.$i.'/#wyszukiwanie'), $users);
 // }
+
+$data = [];
+for($i = 40683; $i < 40685; $i++)
+{
+    $data[] = getPageContent($website.$i);
+
+}
 
 dump($data); die;
 
