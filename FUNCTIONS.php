@@ -16,30 +16,30 @@ function dump($data)
 }
 
 //Create CSV from page content
-function createCSV($data)
-{
+// function createCSV($data)
+// {
 
-    header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="sample.csv"');
+//     header('Content-Type: text/csv');
+//     header('Content-Disposition: attachment; filename="sample.csv"');
 
 
-    $fp = fopen('php://output', 'wb');
-    fprintf($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
-    $i = 0;
-    $headers = [];
-    $fields = [];
-    foreach ($data as $key => $field) {
+//     $fp = fopen('php://output', 'wb');
+//     fprintf($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
+//     $i = 0;
+//     $headers = [];
+//     $fields = [];
+//     foreach ($data as $key => $field) {
 
-        $headers[] = $key;
-        $fields[] = $field;
+//         $headers[] = $key;
+//         $fields[] = $field;
 
-        $i++;
-    }
+//         $i++;
+//     }
 
-    fputcsv($fp, $headers);
-    fputcsv($fp, $fields);
-    fclose($fp);
-}
+//     fputcsv($fp, $headers);
+//     fputcsv($fp, $fields);
+//     fclose($fp);
+// }
 
 
 
@@ -50,6 +50,8 @@ function getPageContent($url)
     $tableHeaders = [];
     $nodes = [];
     $name = [];
+
+    $ignoredHeaders = ['Stary nr wpisu'];
 
     $doc = new DOMDocument();
     $doc->loadHTML(file_get_contents($url));
@@ -64,15 +66,18 @@ function getPageContent($url)
 
         //Remove excessing chars
         $header = str_replace(':', '', $header);
-        //Prepare node for proper output
+        //Prepare node for proper output / Clear unwanted spaces, <br/> etc.
         $node = trim($td->nodeValue);
         $node = nl2br($node);
         $node = preg_replace("/<br\W*?\/>/", "|", $node);
         $node = preg_replace('/\s+/',' ', $node);
         $node = str_replace('| | |' , ' | ' , $node);
         $node = str_replace('| |' , ' | ' , $node);
-        $nodes['Nazwa'] = $name[0];
-        $nodes[$header] = $node;
+        if(!empty($name) && isset($name))
+            $nodes['Nazwa'] = $name[0];
+
+        if(!in_array($header, $ignoredHeaders))
+            $nodes[$header] = $node;
     }
 
     return $nodes;
@@ -90,6 +95,7 @@ function fetchListForIds($url)
 
     return $nodes;
 }
+
 
 function getElementHrefByClass(&$parentNode, $tagName, $className, $offset = 0)
 {
